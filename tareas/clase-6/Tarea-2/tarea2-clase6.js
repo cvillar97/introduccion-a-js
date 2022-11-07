@@ -4,6 +4,7 @@ const botonCalcular = document.querySelector("#calcular")
 const divIntegrantes = document.querySelector("#integrantes")
 const resultados = document.querySelector("#resultados")
 const botonLimpiar = document.querySelector("#limpiar")
+const $erroresSalarios = document.querySelector("#error-salarios")
 
 let numeroIntegrantes = 0
 
@@ -12,8 +13,8 @@ botonAgregar.onclick = function () {
     agregarIntegrante()
     agregarLabelIntegrante(numeroIntegrantes)
     agregarInputIntegrante(numeroIntegrantes)
-    mostrarBoton(botonQuitar)
-    mostrarBoton(botonCalcular)
+    mostrarElemento(botonQuitar)
+    mostrarElemento(botonCalcular)
 
 }
 
@@ -21,26 +22,25 @@ botonQuitar.onclick = function () {
     removerIntegrante()
 
     if (numeroIntegrantes === 0) {
-        ocultarBoton(botonCalcular)
-        ocultarBoton(botonQuitar)
+        ocultarElemento(botonCalcular)
+        ocultarElemento(botonQuitar)
     }
 }
 
 botonCalcular.onclick = function () {
 
     let listaSalarios = document.querySelectorAll("#integrantes input")
-    let arraySalarios = []
+    marcarErroresEnSalarios(listaSalarios)
+    let arraySalarios = crearArraySalarios(listaSalarios)
+    let errorSalarios = validarSalarios(arraySalarios)
 
-    for (let i = 0; i < listaSalarios.length; i++) {
-        let salario = Number(listaSalarios[i].value)
 
-        if (salario !== 0 && salario !== null) {
-            arraySalarios.push(salario)
-        }
-    }
 
-    if (arraySalarios.length >= 2) {
-
+    if (errorSalarios) {
+        mostrarElemento($erroresSalarios)
+        resultados.textContent = ''
+    } else {
+        ocultarElemento($erroresSalarios)
         let mayorSalario = obtenerMayorSalario(arraySalarios)
         let menorSalario = obtenerMenorSalario(arraySalarios)
         let promedio = obtenerPromedio(arraySalarios)
@@ -48,37 +48,71 @@ botonCalcular.onclick = function () {
 
         mostrarResultados(mayorSalario, menorSalario, promedio, salarioMensualPromedio)
 
-        mostrarBoton(botonLimpiar)
-
-    } else {
-        alert("Ingrese al menos 2 valores")
+        mostrarElemento(botonLimpiar)
     }
 
 }
 
-botonLimpiar.onclick = function() {
+botonLimpiar.onclick = function () {
     resultados.textContent = ""
 
     for (let i = numeroIntegrantes; i >= 1; i--) {
         removerIntegrante()
     }
 
-    ocultarBoton(botonLimpiar)
-    ocultarBoton(botonCalcular)
-    ocultarBoton(botonQuitar)
+    ocultarElemento(botonLimpiar)
+    ocultarElemento(botonCalcular)
+    ocultarElemento(botonQuitar)
+}
+
+function validarSalarios(arraySalarios) {
+    let contadorErrores = 0
+
+    arraySalarios.forEach(function (salario) {
+        if (salario <= 0) {
+            contadorErrores++
+        }
+    })
+
+    if (contadorErrores) {
+        return 'El campo salario no puede ser menor o igual a 0 ni vacio'
+    } else {
+        return ''
+    }
+}
+
+function crearArraySalarios(listaSalarios) {
+    let arraySalarios = []
+
+    listaSalarios.forEach(function (salario) {
+        let valorSalario = Number(salario.value)
+        arraySalarios.push(valorSalario)
+    })
+
+    return arraySalarios
+}
+
+function marcarErroresEnSalarios(inputsSalarios) {
+    inputsSalarios.forEach(function (input) {
+        if (input.value <= 0 || input.value === null) {
+            input.className = "error"
+        } else {
+            input.className = ''
+        }
+    })
 }
 
 function mostrarResultados(mayor, menor, promedioA, promedioM) {
     resultados.textContent = "El mayor salario es $" + mayor + " el menor salario es $"
-        + menor + " el salario anual promedio es $" + promedioA + " el salario mensual promedio es $"
-        + promedioM
+        + menor + " el salario anual promedio es $" + Math.round(promedioA) + " el salario mensual promedio es $"
+        + Math.round(promedioM)
 }
 
-function mostrarBoton(boton) {
-    boton.className = "mostrar"
+function mostrarElemento(boton) {
+    boton.className = ""
 }
 
-function ocultarBoton(boton) {
+function ocultarElemento(boton) {
     boton.className = "ocultar"
 }
 
@@ -104,7 +138,7 @@ function crearIntegrante() {
 function crearLabelIntegrante(id) {
     let labelIntegrante = document.createElement("label")
     labelIntegrante.id = "label-" + id
-    labelIntegrante.textContent = "Edad de Integrante N° " + id
+    labelIntegrante.textContent = "Salario de integrante N° " + id
 
     return labelIntegrante
 }
