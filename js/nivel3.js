@@ -327,7 +327,7 @@ tareaOperador(restar, 100, 70)
 //       Utilizá console.log para ver lo que obtuviste!
 
 
-let nuestroTitulo = document.querySelector('h1').textContent
+let nuestroTitulo = document.querySelector('h1')
 
 console.log(nuestroTitulo)
 
@@ -526,9 +526,6 @@ $botonIngreso.onclick = function () {
 
 
 
-
-
-
 /*
     Editando estilos
     ==============
@@ -545,11 +542,13 @@ $botonIngreso.onclick = function () {
 
     const nuestroTwitter = document.querySelector('.twitter');
     nuestroTwitter.style.backgroundColor = 'white';
+    nuestroTwitter.style.fontSize = 20px; Entonces nos queda en el famoso "camel case"
 */
 
 // Tarea: Obtené cualquier elemento de la página y cambiale algunos estilos.
 
-
+nuestroTitulo.style.fontSize = "100px";
+nuestroTitulo.style.color = "red";
 
 
 
@@ -566,11 +565,13 @@ $botonIngreso.onclick = function () {
 
     Ejemplo:
 
-    const nodoPagina = document.querySelector('body');
-    const nuevoParrafo = document.createElement('p');
-    const textoParrafo = document.createTextNode('Yeeee!');
-    nuevoParrafo.appendChild(textoParrafo);
+    const nodoPagina = document.querySelector('body');   
+    const nuevoParrafo = document.createElement('p'); // <p></p>
+    const textoParrafo = document.createTextNode('Yeeee!');// "Yeeee!"
+    nuevoParrafo.appendChild(textoParrafo); // <p>Yeeee!</p>
     nodoPagina.appendChild(nuevoParrafo);
+
+    "append" significa que  siempre añadirá cosas al final de nuestro nodo o tag.
 */
 
 // Tarea: Todavía seguís teniendo a los gatitos en tu pantalla? A mí me gusta el logo y los gatitos.
@@ -579,7 +580,15 @@ $botonIngreso.onclick = function () {
 //
 // P.S. También les podés dar estilos al nuevo nodo que creaste.
 
+const nodoImagen = document.createElement("img");
+nodoImagen.src = "img/woman_bw.jpg";
 
+// En este caso tuve que escribir el nombre de la carpeta en la que estaba guardada
+// la imagen ("img") ya que me tiraba error.
+
+// Luego pasamos a capturar el nodo header y agregarle la imagen con appendChild:
+
+document.querySelector("header").appendChild(nodoImagen);
 
 
 
